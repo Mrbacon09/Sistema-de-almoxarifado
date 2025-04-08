@@ -8,9 +8,9 @@ import java.util.List;
 
 public class Almoxarifado {
 
-    private static Almoxarifado instancia;
-    private static Map<Integer, Produto> produtos = new HashMap<>();
-    private Almoxarifado() {}
+    private static Almoxarifado instancia; // Singleton: garante que só existe uma instância da classe Almoxarifado
+    private static Map<Integer, Produto> produtos = new HashMap<>(); // Mapeia o id do produto com o objeto Produto, permitindo acesso rápido ao produto pelo id
+    private Almoxarifado() {}       // Construtor para impedir instância externa
     public static Almoxarifado getInstance() {
         if (instancia == null) {
             instancia = new Almoxarifado();
@@ -31,22 +31,13 @@ public class Almoxarifado {
     public void cadastrar(Produto p) { 
         produtos.put(p.getId(), p); 
     }
-
     public <ProdutoPerecivel> void cadastrar(Produto... produtosArray) {
         for (Produto p : produtosArray) {
             produtos.put(p.getId(), p);
         }
     }
 
-    public class ExecutarDespacho implements Despacho {
-        @Override
-        public void executar(Produto p, int quantidade) {
-            p.removeQuantidade(quantidade);
-            System.out.println("Retirada de " + quantidade + " itens");
-        }
-    }
-
-    public static List<Produto> verificarEstoque() { 
+    public static List<Produto> verificarEstoque() { //Verifica quantos de cada um dos produtos estão disponíveis no estoque agrupando-o em uma lista
         List<Produto> lista = new ArrayList<>();
         for (Produto p : produtos.values()) {
             if (p.getQuantidade() > 0) {
@@ -59,7 +50,7 @@ public class Almoxarifado {
         return lista;
     }
     
-    public static void gerarRelatorio(){
+    public static void gerarRelatorio(){ //Gera o relatorio de produtos disponíveis a partir da lista de produtos
         Relatorio<Produto> relatorio = new Relatorio<>();
         relatorio.gerar( verificarEstoque() );
     }
